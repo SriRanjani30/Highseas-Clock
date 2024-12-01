@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analog Clocks for Different Time Zones</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            flex-wrap: wrap;
+            animation: fadeIn 2s ease-in-out;
+            transition: background 2s ease;
+            background: linear-gradient(135deg, #1d2b64, #f8cdda);
+        }
+        .clock-container {
+            text-align: center;
+            margin: 20px;
+            color: white;
+        }
+        .clock {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            border: 10px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), 0 0 100px rgba(0, 0, 0, 0.3);
+            margin-bottom: 15px;
+            animation: scaleUp 1s ease-in-out;
+        }
+        .hand {
+            position: absolute;
+            background: #ff6b6b;
+            border-radius: 10px;
+            transform-origin: bottom;
+            bottom: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: transform 0.5s ease-in-out;
+        }
+        .hour {
+            width: 8px;
+            height: 70px;
+            background: #ff6b6b;
+            z-index: 3;
+        }
+        .minute {
+            width: 6px;
+            height: 100px;
+            background: #fff;
+            z-index: 2;
+        }
+        .second {
+            width: 2px;
+            height: 120px;
+            background: #ffcc00;
+            z-index: 1;
+        }
+        .center {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        h3 {
+            font-size: 22px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes scaleUp {
+            from {
+                transform: scale(0.8);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+        .theme-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .theme-selector:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        .theme-selector select {
+            background-color: None;
+            color: black;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .clock:hover .hand {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+        .clock:hover .center {
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container" id="newYorkClock">
+        <h3>New York (EST)</h3>
+        <div class="clock">
+            <div class="hand hour" id="hourHandNY"></div>
+            <div class="hand minute" id="minuteHandNY"></div>
+            <div class="hand second" id="secondHandNY"></div>
+            <div class="center"></div>
+        </div>
+    </div>
+    <div class="clock-container" id="londonClock">
+        <h3>London (GMT)</h3>
+        <div class="clock">
+            <div class="hand hour" id="hourHandLondon"></div>
+            <div class="hand minute" id="minuteHandLondon"></div>
+            <div class="hand second" id="secondHandLondon"></div>
+            <div class="center"></div>
+        </div>
+    </div>
+    <div class="clock-container" id="tokyoClock">
+        <h3>Tokyo (JST)</h3>
+        <div class="clock">
+            <div class="hand hour" id="hourHandTokyo"></div>
+            <div class="hand minute" id="minuteHandTokyo"></div>
+            <div class="hand second" id="secondHandTokyo"></div>
+            <div class="center"></div>
+        </div>
+    </div>
+
+    <div class="clock-container" id="delhiClock">
+        <h3>Delhi (IST)</h3>
+        <div class="clock">
+            <div class="hand hour" id="hourHandDelhi"></div>
+            <div class="hand minute" id="minuteHandDelhi"></div>
+            <div class="hand second" id="secondHandDelhi"></div>
+            <div class="center"></div>
+        </div>
+    </div>
+    <div class="theme-selector">
+        <label for="theme">Select Theme: </label>
+        <select id="theme" onchange="changeTheme()">
+            <option value="default">Default</option>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+        </select>
+    </div>
+    <script>
+        function updateClock(clockId, timezoneOffset) {
+            const now = new Date();
+            const localTime = new Date(now.getTime() + timezoneOffset * 60000);
+            const seconds = localTime.getSeconds();
+            const minutes = localTime.getMinutes();
+            const hours = localTime.getHours();
+            const secondDeg = ((seconds / 60) * 360) + 90;
+            const minuteDeg = ((minutes / 60) * 360) + ((seconds / 60) * 6) + 90;
+            const hourDeg = ((hours / 12) * 360) + ((minutes / 60) * 30) + 90;
+            document.getElementById(`secondHand${clockId}`).style.transform = `translateX(-50%) rotate(${secondDeg}deg)`;
+            document.getElementById(`minuteHand${clockId}`).style.transform = `translateX(-50%) rotate(${minuteDeg}deg)`;
+            document.getElementById(`hourHand${clockId}`).style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
+        }       
+        function updateAllClocks() {
+            updateClock('NY', -300);    
+            updateClock('London', 0);    
+            updateClock('Tokyo', 540);   
+            updateClock('New Delhi', 330);  
+        }
+        function changeTheme() {
+            const theme = document.getElementById('theme').value;
+            const body = document.body;
+            if (theme === 'dark') {
+                body.style.background = 'linear-gradient(135deg, #1d2b64, #000)';
+            } else if (theme === 'light') {
+                body.style.background = 'linear-gradient(135deg, #f8cdda, #ffffff)';
+            } else {
+                body.style.background = 'linear-gradient(135deg, #1d2b64, #f8cdda)';
+            }
+        }
+        setInterval(updateAllClocks, 1000);
+        updateAllClocks();
+    </script>
+</body>
+</html>
