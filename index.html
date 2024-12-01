@@ -17,11 +17,13 @@
             transition: background 2s ease;
             background: linear-gradient(135deg, #1d2b64, #f8cdda);
         }
+
         .clock-container {
             text-align: center;
             margin: 20px;
             color: white;
         }
+
         .clock {
             position: relative;
             width: 260px;
@@ -33,6 +35,7 @@
             margin-bottom: 15px;
             animation: scaleUp 1s ease-in-out;
         }
+
         .hand {
             position: absolute;
             background: #ff6b6b;
@@ -43,24 +46,28 @@
             transform: translateX(-50%);
             transition: transform 0.5s ease-in-out;
         }
+
         .hour {
             width: 8px;
             height: 70px;
             background: #ff6b6b;
             z-index: 3;
         }
+
         .minute {
             width: 6px;
             height: 100px;
             background: #fff;
             z-index: 2;
         }
+
         .second {
             width: 2px;
             height: 120px;
             background: #ffcc00;
             z-index: 1;
         }
+
         .center {
             position: absolute;
             width: 20px;
@@ -73,12 +80,14 @@
             z-index: 4;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
         }
+
         h3 {
             font-size: 22px;
             margin-top: 10px;
             text-transform: uppercase;
             font-weight: bold;
         }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -87,6 +96,7 @@
                 opacity: 1;
             }
         }
+
         @keyframes scaleUp {
             from {
                 transform: scale(0.8);
@@ -95,6 +105,7 @@
                 transform: scale(1);
             }
         }
+
         .theme-selector {
             position: fixed;
             top: 20px;
@@ -107,9 +118,11 @@
             cursor: pointer;
             transition: background 0.3s ease;
         }
+
         .theme-selector:hover {
             background-color: rgba(0, 0, 0, 0.9);
         }
+
         .theme-selector select {
             background-color: None;
             color: black;
@@ -117,12 +130,15 @@
             font-size: 16px;
             cursor: pointer;
         }
+
         .clock:hover .hand {
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
         }
+
         .clock:hover .center {
             box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
         }
+
     </style>
 </head>
 <body>
@@ -135,6 +151,7 @@
             <div class="center"></div>
         </div>
     </div>
+
     <div class="clock-container" id="londonClock">
         <h3>London (GMT)</h3>
         <div class="clock">
@@ -144,6 +161,7 @@
             <div class="center"></div>
         </div>
     </div>
+
     <div class="clock-container" id="tokyoClock">
         <h3>Tokyo (JST)</h3>
         <div class="clock">
@@ -163,6 +181,7 @@
             <div class="center"></div>
         </div>
     </div>
+
     <div class="theme-selector">
         <label for="theme">Select Theme: </label>
         <select id="theme" onchange="changeTheme()">
@@ -171,6 +190,7 @@
             <option value="light">Light</option>
         </select>
     </div>
+
     <script>
         function updateClock(clockId, timezoneOffset) {
             const now = new Date();
@@ -178,22 +198,27 @@
             const seconds = localTime.getSeconds();
             const minutes = localTime.getMinutes();
             const hours = localTime.getHours();
+
             const secondDeg = ((seconds / 60) * 360) + 90;
             const minuteDeg = ((minutes / 60) * 360) + ((seconds / 60) * 6) + 90;
             const hourDeg = ((hours / 12) * 360) + ((minutes / 60) * 30) + 90;
+
             document.getElementById(`secondHand${clockId}`).style.transform = `translateX(-50%) rotate(${secondDeg}deg)`;
             document.getElementById(`minuteHand${clockId}`).style.transform = `translateX(-50%) rotate(${minuteDeg}deg)`;
             document.getElementById(`hourHand${clockId}`).style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
-        }       
+        }
+
         function updateAllClocks() {
             updateClock('NY', -300);    
             updateClock('London', 0);    
             updateClock('Tokyo', 540);   
-            updateClock('New Delhi', 330);  
+            updateClock('Delhi', 330);  
         }
+
         function changeTheme() {
             const theme = document.getElementById('theme').value;
             const body = document.body;
+
             if (theme === 'dark') {
                 body.style.background = 'linear-gradient(135deg, #1d2b64, #000)';
             } else if (theme === 'light') {
